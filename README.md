@@ -1,4 +1,4 @@
-# UPP MCP Agents
+# Universal MCP Ecosystem
 
 Unified Model Context Protocol (MCP) agents and servers for the Universal Payment Protocol ecosystem.
 
@@ -13,7 +13,7 @@ This repository contains all MCP servers and agents used across the UPP ecosyste
 ## Architecture
 
 ```
-upp-mcp-agents/
+universal-mcp-ecosystem/
 ├── servers/
 │   ├── aws/              # AWS service integrations
 │   ├── database/         # Database MCP servers
@@ -45,8 +45,8 @@ upp-mcp-agents/
 
 ```bash
 # Clone repository
-git clone https://github.com/robertsn808/upp-mcp-agents.git
-cd upp-mcp-agents
+git clone https://github.com/robertsn808/universal-mcp-ecosystem.git
+cd universal-mcp-ecosystem
 
 # Install dependencies
 npm install
@@ -298,8 +298,8 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/robertsn808/upp-mcp-agents/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/robertsn808/upp-mcp-agents/discussions)
+- **Issues**: [GitHub Issues](https://github.com/robertsn808/universal-mcp-ecosystem/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/robertsn808/universal-mcp-ecosystem/discussions)
 - **Email**: support@upp.dev
 
 ## Changelog
