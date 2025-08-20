@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: alii-web-frontend
+    env: docker
+    rootDir: apps/web-frontend
+    docker:
+      dockerfilePath: apps/web-frontend/Dockerfile
+    plan: starter
+    envVars:
+      - key: WEB_BASE_URL
+        value: https://alii-website.onrender.com
+    domains:
+      - alii-website.onrender.com
+

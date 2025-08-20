@@ -1,0 +1,3 @@
+databases:
+  - name: alii-db
+    plan: free

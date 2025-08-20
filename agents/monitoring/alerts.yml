@@ -1,0 +1,31 @@
+groups:
+  - name: mcp-stack
+    interval: 15s
+    rules:
+      - alert: HighAPIErrorRate
+        expr: sum(rate(http_errors_total[5m])) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: High API 5xx rate
+          description: API is returning more than 0.5 5xx responses per second.
+
+      - alert: WorkerJobErrors
+        expr: sum(rate(worker_jobs_total{status="error"}[5m])) > 0.1
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Worker jobs failing
+          description: Error rate for worker jobs exceeded threshold.
+
+      - alert: ProviderDownRealMode
+        expr: worker_provider_health{mode="real"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Provider down (real mode)
+          description: A video provider in real mode is unhealthy.
+

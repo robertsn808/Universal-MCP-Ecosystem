@@ -1,0 +1,55 @@
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 2m
+  repeat_interval: 2h
+  receiver: slack-default
+  routes:
+    - receiver: pagerduty
+      matchers:
+        - severity="critical"
+    - receiver: slack-critical
+      matchers:
+        - severity="critical"
+
+receivers:
+  - name: slack-default
+    slack_configs:
+      - api_url: ${ALERTMANAGER_SLACK_WEBHOOK_URL}
+        channel: ${ALERTMANAGER_SLACK_CHANNEL:-#alerts}
+        send_resolved: true
+        title: '{{ .CommonAnnotations.summary }}'
+        text: |
+          {{ range .Alerts }}
+          • {{ .Annotations.description }}
+            labels:
+          {{- range $k, $v := .Labels }}
+          {{- if or (eq $k "authorization") (eq $k "runway_api_key") (eq $k "upp_api_key") (eq $k "slack_signing_secret") }}
+            - {{$k}}: [redacted]
+          {{- else }}
+            - {{$k}}: {{$v}}
+          {{- end }}
+          {{- end }}
+          {{ end }}
+  - name: slack-critical
+    slack_configs:
+      - api_url: ${ALERTMANAGER_SLACK_WEBHOOK_URL}
+        channel: ${ALERTMANAGER_SLACK_CRITICAL_CHANNEL:-#critical-alerts}
+        send_resolved: true
+        title: '[CRITICAL] {{ .CommonAnnotations.summary }}'
+        text: |
+          {{ range .Alerts }}
+          • {{ .Annotations.description }}
+            labels:
+          {{- range $k, $v := .Labels }}
+          {{- if or (eq $k "authorization") (eq $k "runway_api_key") (eq $k "upp_api_key") (eq $k "slack_signing_secret") }}
+            - {{$k}}: [redacted]
+          {{- else }}
+            - {{$k}}: {{$v}}
+          {{- end }}
+          {{- end }}
+          {{ end }}
+  - name: pagerduty
+    pagerduty_configs:
+      - routing_key: ${ALERTMANAGER_PAGERDUTY_ROUTING_KEY}
+        severity: '{{ .CommonLabels.severity | default "critical" }}'

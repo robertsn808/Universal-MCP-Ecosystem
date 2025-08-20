@@ -1,0 +1,135 @@
+{
+  "agents": {
+    "alii-menu-management": {
+      "path": "./agents/alii/menu-management/server.ts",
+      "description": "Alii Fish Market menu and inventory management",
+      "enabled": true,
+      "dependencies": ["database"],
+      "environment": {
+        "ALII_API_URL": "${ALII_API_URL}",
+        "ALII_DB_URL": "${ALII_DB_URL}"
+      }
+    },
+    "alii-order-processing": {
+      "path": "./agents/alii/order-processing/server.ts", 
+      "description": "Real-time order handling and customer notifications",
+      "enabled": true,
+      "dependencies": ["database", "payments"],
+      "environment": {
+        "ALII_API_URL": "${ALII_API_URL}",
+        "TWILIO_ACCOUNT_SID": "${TWILIO_ACCOUNT_SID}",
+        "TWILIO_AUTH_TOKEN": "${TWILIO_AUTH_TOKEN}"
+      }
+    },
+    "upp-payment-processor": {
+      "path": "./agents/upp/payment-processor/server.ts",
+      "description": "Universal payment protocol processing",
+      "enabled": true,
+      "dependencies": ["payments"],
+      "environment": {
+        "UPP_API_URL": "${UPP_API_URL}",
+        "UPP_API_KEY": "${UPP_API_KEY}",
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+      }
+    },
+    "upp-device-manager": {
+      "path": "./agents/upp/device-manager/server.ts",
+      "description": "Device registration and capability management", 
+      "enabled": true,
+      "dependencies": ["database"],
+      "environment": {
+        "UPP_API_URL": "${UPP_API_URL}",
+        "UPP_API_KEY": "${UPP_API_KEY}"
+      }
+    },
+    "seller-lead-generation": {
+      "path": "./agents/seller/lead-generation/server.ts",
+      "description": "Real estate lead generation and CRM integration",
+      "enabled": true,
+      "dependencies": ["database", "automation"],
+      "environment": {
+        "SELLER_API_URL": "${SELLER_API_URL}",
+        "SELLER_DB_URL": "${SELLER_DB_URL}",
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+      }
+    }
+  },
+  "servers": {
+    "aws-dynamodb": {
+      "path": "./servers/aws/dynamodb-mcp-server",
+      "type": "python",
+      "description": "Amazon DynamoDB operations",
+      "enabled": true,
+      "environment": {
+        "AWS_REGION": "${AWS_REGION}",
+        "AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${AWS_SECRET_ACCESS_KEY}"
+      }
+    },
+    "aws-lambda": {
+      "path": "./servers/aws/lambda-tool-mcp-server",
+      "type": "python", 
+      "description": "AWS Lambda function management",
+      "enabled": true,
+      "environment": {
+        "AWS_REGION": "${AWS_REGION}",
+        "AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${AWS_SECRET_ACCESS_KEY}"
+      }
+    },
+    "aws-cloudwatch": {
+      "path": "./servers/aws/cloudwatch-mcp-server",
+      "type": "python",
+      "description": "CloudWatch monitoring and logging",
+      "enabled": true,
+      "environment": {
+        "AWS_REGION": "${AWS_REGION}",
+        "AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${AWS_SECRET_ACCESS_KEY}"
+      }
+    },
+    "postgres-database": {
+      "path": "./servers/database/postgres-mcp-server",
+      "type": "python",
+      "description": "PostgreSQL database operations",
+      "enabled": true,
+      "environment": {
+        "DATABASE_URL": "${DATABASE_URL}",
+        "ALII_DB_URL": "${ALII_DB_URL}",
+        "SELLER_DB_URL": "${SELLER_DB_URL}"
+      }
+    },
+    "n8n-automation": {
+      "path": "./servers/automation/n8n",
+      "type": "workflow",
+      "description": "N8N automation workflows",
+      "enabled": true,
+      "environment": {
+        "N8N_WEBHOOK_URL": "${N8N_WEBHOOK_URL}",
+        "N8N_API_KEY": "${N8N_API_KEY}"
+      }
+    }
+  },
+  "dependencies": {
+    "database": ["postgres-database"],
+    "payments": ["upp-payment-processor"],
+    "automation": ["n8n-automation"],
+    "aws": ["aws-dynamodb", "aws-lambda", "aws-cloudwatch"]
+  },
+  "startup": {
+    "order": [
+      "servers",
+      "core-agents", 
+      "business-agents"
+    ],
+    "core-agents": [
+      "upp-payment-processor",
+      "upp-device-manager"
+    ],
+    "business-agents": [
+      "alii-menu-management",
+      "alii-order-processing", 
+      "seller-lead-generation"
+    ]
+  }
+}

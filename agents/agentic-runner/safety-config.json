@@ -1,0 +1,71 @@
+{
+  "allowedPaths": [
+    "/home/i0vvny0u/Applications/MCP/adk-samples/python/agents/alii",
+    "/home/i0vvny0u/Applications/MCP/adk-samples/python/agents/marketing-agency",
+    "/home/i0vvny0u/Applications/MCP/agentic-runner",
+    "/home/i0vvny0u/MCP/adk-samples/python/agents/alii",
+    "/home/i0vvny0u/MCP/adk-samples/python/agents/marketing-agency",
+    "/home/i0vvny0u/MCP/agentic-runner",
+    "/home/i0vvny0u/Applications/Work/alii",
+    "/tmp/claude-workspace"
+  ],
+  "blockedPaths": [
+    "/etc",
+    "/usr/bin",
+    "/bin",
+    "/sbin",
+    "/var",
+    "/root",
+    "/.ssh",
+    "/home/*/.ssh"
+  ],
+  "allowedCommands": [
+    "git",
+    "npm",
+    "pip",
+    "python",
+    "python3",
+    "pytest",
+    "poetry",
+    "ls",
+    "cat",
+    "grep",
+    "find",
+    "mkdir",
+    "cp",
+    "mv",
+    "touch",
+    "code",
+    "vim",
+    "nano",
+    "curl",
+    "wget"
+  ],
+  "blockedCommands": [
+    "rm",
+    "rmdir",
+    "dd",
+    "fdisk",
+    "mkfs",
+    "mount",
+    "umount",
+    "su",
+    "sudo",
+    "passwd",
+    "chown",
+    "chmod",
+    "iptables",
+    "systemctl",
+    "service",
+    "crontab",
+    "at",
+    "batch"
+  ],
+  "requireConfirmation": {
+    "deletions": true,
+    "systemCommands": true,
+    "networkOperations": true,
+    "packageInstalls": true
+  },
+  "maxSessionDuration": 60
+}

@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: alii-slack-bot
+    env: docker
+    rootDir: services/slack-bot
+    docker:
+      dockerfilePath: services/slack-bot/Dockerfile
+    plan: starter
+    envVars:
+      - key: SLACK_BOT_TOKEN
+        sync: false
+      - key: SLACK_SIGNING_SECRET
+        sync: false
+      - key: API_BASE_URL
+        value: https://alii-api-backend.onrender.com
+    routes:
+      - type: http
+        src: /slack/events
+        dest: /
+

@@ -1,0 +1,11 @@
+
+> agentic-claude-runner@1.0.0 dev
+> ts-node services/runner/main.ts
+
+🚀 Agentic Claude Code Runner listening on port 3001
+🔧 Endpoints:
+  POST /execute - Execute a coding task
+  GET /confirmations - List pending confirmations
+  POST /confirm/:taskId - Approve/deny a confirmation
+  DELETE /confirm/:taskId - Cancel a confirmation
+  GET /health - Health check

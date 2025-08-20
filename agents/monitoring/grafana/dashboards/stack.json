@@ -1,0 +1,70 @@
+{
+  "title": "MCP Stack Overview",
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "API Requests/s (2xx/4xx/5xx)",
+      "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "sum(rate(http_requests_total{status=~\"2..\"}[1m]))", "legendFormat": "2xx"},
+        {"expr": "sum(rate(http_requests_total{status=~\"4..\"}[1m]))", "legendFormat": "4xx"},
+        {"expr": "sum(rate(http_requests_total{status=~\"5..\"}[1m]))", "legendFormat": "5xx"}
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "API Latency (p50/p90/p99)",
+      "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "histogram_quantile(0.5, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p50"},
+        {"expr": "histogram_quantile(0.9, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p90"},
+        {"expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "p99"}
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Worker Jobs by Status",
+      "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "sum(rate(worker_jobs_total{status=\"done\"}[1m])) by (type)", "legendFormat": "{{type}} done"},
+        {"expr": "sum(rate(worker_jobs_total{status=\"error\"}[1m])) by (type)", "legendFormat": "{{type}} error"}
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Adapter Retries",
+      "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "sum(rate(worker_adapter_retries_total[5m])) by (provider,method,status)", "legendFormat": "{{provider}} {{method}} {{status}}"}
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Video Artifacts Uploaded",
+      "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "sum(rate(worker_video_artifacts_uploaded_total[5m])) by (provider)", "legendFormat": "{{provider}}"}
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Provider Health (real)",
+      "gridPos": {"x": 0, "y": 24, "w": 12, "h": 6},
+      "targets": [
+        {"expr": "worker_provider_health{mode=\"real\"}", "legendFormat": "{{provider}}"}
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Worker Job Duration (avg)",
+      "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+      "targets": [
+        {"expr": "sum(rate(worker_job_duration_seconds_sum[5m])) / sum(rate(worker_job_duration_seconds_count[5m]))", "legendFormat": "avg"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: alii-api-backend
+    env: docker
+    rootDir: services/api-backend
+    docker:
+      dockerfilePath: services/api-backend/Dockerfile
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+      - key: UPP_API_BASE
+        sync: false
+      - key: UPP_API_KEY
+        sync: false
+      - key: WEB_BASE_URL
+        value: https://alii-website.onrender.com
+      - key: STORAGE_PROVIDER
+        value: s3
+      - key: STORAGE_BUCKET
+        sync: false
+      - key: STORAGE_REGION
+        sync: false
+      - key: STORAGE_ACCESS_KEY
+        sync: false
+      - key: STORAGE_SECRET_KEY
+        sync: false
+      - key: STORAGE_ENDPOINT
+        sync: false
+      - key: ARTIFACTS_BASE_URL
+        value: https://alii-api-backend.onrender.com/artifacts

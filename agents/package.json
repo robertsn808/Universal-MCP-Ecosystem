@@ -1,0 +1,31 @@
+{
+  "name": "alii-fish-market-stack",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm -ws run build",
+    "clean": "npm -ws run clean || true",
+    "dev:api": "npm --workspace services/api-backend run dev",
+    "dev:bot": "npm --workspace services/slack-bot run dev",
+    "dev:worker": "npm --workspace services/worker run dev",
+    "dev:web": "npm --workspace apps/web-frontend run dev",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --watchAll=false",
+    "test:db:up": "docker compose -f docker-compose.test.yml up -d",
+    "test:db:down": "docker compose -f docker-compose.test.yml down",
+    "test:integration": "npm run test:db:up && sleep 10 && npm run test:ci && npm run test:db:down"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "ai-sdk-provider-gemini-cli": "^1.1.0"
+  }
+}

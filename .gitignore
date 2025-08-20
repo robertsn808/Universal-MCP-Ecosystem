@@ -1,0 +1,100 @@
+# Dependencies
+node_modules/
+.npm
+.yarn/
+yarn-error.log
+package-lock.json
+
+# Build outputs
+dist/
+build/
+coverage/
+*.tgz
+
+# Environment and secrets
+.env*
+!.env.example
+
+# Runtime data
+*.pid
+*.seed
+*.pid.lock
+.pids/
+logs/
+*.log
+
+# Database files
+*.sqlite
+*.db
+data/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Docker volumes and data
+docker-volumes/
+localstack/
+
+# Testing
+.nyc_output/
+coverage/
+.coverage
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# AWS
+.aws/
+
+# MCP specific
+.mcp/
+mcp-data/
+
+# Monitoring and metrics
+prometheus-data/
+grafana-data/
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+
+# Backup files
+*.bak
+*.backup
+
+# System files
+Thumbs.db
+.directory
+.fuse_hidden*

@@ -1,0 +1,36 @@
+{
+  "name": "api-backend",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "dev": "node -r dotenv/config node_modules/ts-node-dev/bin.js --respawn --transpile-only src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node -r dotenv/config dist/index.js",
+    "clean": "rimraf dist",
+    "test:webhook:ok": "node ./test/upp-webhook.test.js --ok",
+    "test:webhook:bad": "node ./test/upp-webhook.test.js --bad"
+  },
+  "dependencies": {
+    "@types/uuid": "9.0.8",
+    "cors": "2.8.5",
+    "db": "file:../../packages/db",
+    "express": "^4.21.2",
+    "morgan": "^1.10.1",
+    "next": "14.2.31",
+    "prom-client": "14.2.0",
+    "storage": "file:../../packages/storage",
+    "upp-client": "file:../../packages/upp-client",
+    "uuid": "9.0.1"
+  },
+  "devDependencies": {
+    "@types/cors": "2.8.17",
+    "@types/express": "4.17.21",
+    "@types/morgan": "1.9.9",
+    "@types/node": "20.12.12",
+    "rimraf": "5.0.5",
+    "ts-node-dev": "2.0.0",
+    "typescript": "5.4.5"
+  }
+}

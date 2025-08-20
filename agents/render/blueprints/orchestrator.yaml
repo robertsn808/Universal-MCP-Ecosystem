@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: alii-orchestrator
+    env: image
+    image:
+      url: n8nio/n8n:latest
+    plan: starter
+    envVars:
+      - key: N8N_SECURE_COOKIE
+        value: "true"
+      - key: N8N_HOST
+        value: orchestrator.realconnect.online
+      - key: N8N_PROTOCOL
+        value: https
+

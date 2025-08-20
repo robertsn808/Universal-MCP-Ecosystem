@@ -1,0 +1,27 @@
+services:
+  - type: worker
+    name: alii-worker
+    env: docker
+    rootDir: services/worker
+    docker:
+      dockerfilePath: services/worker/Dockerfile
+    plan: starter
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SLACK_BOT_TOKEN
+        sync: false
+      - key: API_BASE_URL
+        value: https://alii-api-backend.onrender.com
+      - key: STORAGE_PROVIDER
+        value: s3
+      - key: STORAGE_BUCKET
+        sync: false
+      - key: STORAGE_REGION
+        sync: false
+      - key: STORAGE_ACCESS_KEY
+        sync: false
+      - key: STORAGE_SECRET_KEY
+        sync: false
+      - key: STORAGE_ENDPOINT
+        sync: false

@@ -1,0 +1,23 @@
+{
+  "name": "storage",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "fs-extra": "11.2.0",
+    "@aws-sdk/client-s3": "3.624.0",
+    "mime-types": "2.1.35"
+  },
+  "devDependencies": {
+    "@types/node": "20.12.12",
+    "@types/fs-extra": "11.0.4",
+    "@types/mime-types": "2.1.4",
+    "rimraf": "5.0.5",
+    "typescript": "5.4.5"
+  }
+}

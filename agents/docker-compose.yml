@@ -1,0 +1,135 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: alii-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: aliidb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+  api-backend:
+    build:
+      context: .
+      dockerfile: services/api-backend/Dockerfile
+    environment:
+      PORT: 8080
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/aliidb
+      WEB_BASE_URL: http://localhost:3000
+      STORAGE_PROVIDER: local
+      ARTIFACTS_DIR: /data/artifacts
+      ARTIFACTS_BASE_URL: http://localhost:8080/artifacts
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    volumes:
+      - artifacts:/data/artifacts
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:8080/health',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))\" "]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  slack-bot:
+    build:
+      context: .
+      dockerfile: services/slack-bot/Dockerfile
+    environment:
+      PORT: 3001
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+      SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
+      API_BASE_URL: http://api-backend:8080
+    depends_on:
+      - api-backend
+    ports:
+      - "3001:3001"
+
+  worker:
+    build:
+      context: .
+      dockerfile: services/worker/Dockerfile
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/aliidb
+      WORKER_ID: local-1
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+      API_BASE_URL: http://api-backend:8080
+    depends_on:
+      - postgres
+    volumes:
+      - artifacts:/data/artifacts
+    ports:
+      - "9101:9101"
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:9101/metrics',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))\" "]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - api-backend
+      - worker
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./monitoring/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./monitoring/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+      - GF_USERS_DEFAULT_THEME=light
+    depends_on:
+      - prometheus
+
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+    environment:
+      - ALERTMANAGER_SLACK_WEBHOOK_URL=${ALERTMANAGER_SLACK_WEBHOOK_URL}
+      - ALERTMANAGER_SLACK_CHANNEL=${ALERTMANAGER_SLACK_CHANNEL}
+    volumes:
+      - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+    ports:
+      - "9093:9093"
+    depends_on:
+      - prometheus
+
+  web-frontend:
+    build:
+      context: .
+      dockerfile: apps/web-frontend/Dockerfile
+    environment:
+      WEB_BASE_URL: http://localhost:3000
+    ports:
+      - "3000:3000"
+
+  orchestrator:
+    image: n8nio/n8n:latest
+    environment:
+      - N8N_SECURE_COOKIE=true
+      - N8N_PROTOCOL=http
+      - N8N_HOST=localhost
+    ports:
+      - "5679:5678"
+
+volumes:
+  pgdata:
+  artifacts:
