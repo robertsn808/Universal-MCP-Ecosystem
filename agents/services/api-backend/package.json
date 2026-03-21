@@ -18,7 +18,7 @@
     "db": "file:../../packages/db",
     "express": "^4.21.2",
     "morgan": "^1.10.1",
-    "next": "14.2.31",
+    "next": "15.5.14",
     "prom-client": "14.2.0",
     "storage": "file:../../packages/storage",
     "upp-client": "file:../../packages/upp-client",
